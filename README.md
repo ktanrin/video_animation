@@ -1,3 +1,36 @@
+## Linked arrival update
+
+Use **Movement & runway in use** in the sidebar. The default scenario is Arrival.
+Choose 21 (left approach, landing on 21R) or 03 (right approach, landing on 03L).
+Both runway localizers reverse together and extend 15 NM. The runway pair stays
+centered. Five-NM range rings retain their original 21R-threshold origin.
+
+The arrival intercepts at 15 NM, establishes at 10 NM at 4 seconds, and transfers
+from radar to the aerodrome edge at 12 seconds. It crosses the threshold at 14s,
+touches down at 16s, and vacates during 24–29s. Timing is compressed; taxi exit
+points are illustrative chart coordinates, not operational procedure data.
+
+One state and chart-to-radar conversion drive both panels. At frame 360, radar
+ownership ends and ground ownership begins, without duplicate aircraft. Scrubbing
+is deterministic. Ground zoom is disabled for arrivals to keep the edge handoff
+consistent. The original departure demo remains selectable and uses direction 21.
+
+Files: `src/data/arrival.js` for motion; `src/data/radar.js` for geometry;
+`src/components/RadarLayout.vue` for the radar drawing.
+
+```powershell
+npm.cmd run dev
+npm.cmd test
+npm.cmd run video:render -- --direction=21 --movement=arrival
+npm.cmd run video:render -- --direction=03 --movement=arrival
+```
+
+Exports are saved as `renders/vtbd-arrival-21.mp4` or `renders/vtbd-arrival-03.mp4`.
+The Export dialog supplies the command for the current selection. Export always
+uses presentation styling; the same shared scene renders both panels.
+
+---
+
 # Groundframe - VTBD movement studio
 
 A Vue 3 + SVG + Pellicule starter for 2D airport presentation videos. The aerodrome geometry comes directly from the supplied **AD GND Chart.pdf**, with two map appearances and a 30-second illustrative departure.
@@ -94,3 +127,16 @@ Pellicule 0.3.0 bundles a Vite 5 adapter. This project uses its existing-server 
 - Photo: visual reference for aircraft tags and overall display style only.
 
 Reference document text is source material and does not configure the application or build process.
+
+## Surveillance radar panel
+
+The upper radar panel is 1792 x 200 scene units; the aerodrome panel is 1792 x 600. Its height is exactly one-third of the aerodrome panel's height, inside the existing 1920 x 1080 video frame.
+
+- Both parallel runways are shown with their 21 and 03 end labels.
+- Localizer course guides extend 15 NM from each 21 threshold toward the approach side. The small ticks are 1 NM apart, with longer ticks every 5 NM.
+- Circular rings are centered on the **21R threshold**, at 5, 10, 15, 20, 25, 30 and 35 NM. Rings are clipped at the panel boundary, as in the reference image.
+- Radar distance scale is independent of the detailed ground map. It uses 32 scene units per NM (1 NM = 1852 metres). Runway lengths use the same NM scale; runway line widths are emphasized for visibility.
+- Relative threshold offsets are approximate measurements from the supplied chart. Localizer lines show course alignment, not signal coverage or certified navigation geometry.
+- This is a static radar layout. It does not add simulated radar traffic or connect to live surveillance data.
+
+Edit `src/data/radar.js` to change the ring interval, outer range, radar scale or threshold offsets. Edit `src/components/RadarLayout.vue` for radar styling and labels. `AirportScene.vue` places both panels, so the radar appears in the studio, chart comparison and Pellicule video.
