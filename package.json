@@ -11,7 +11,7 @@
     "video:preview": "node scripts/pellicule.mjs preview",
     "video:sample": "node scripts/pellicule.mjs sample",
     "video:render": "node scripts/pellicule.mjs render",
-    "test": "node --test scripts/scenario.test.mjs scripts/arrival.test.mjs"
+    "test": "node --test scripts/scenario.test.mjs scripts/arrival.test.mjs scripts/hiro.test.mjs"
   },
   "dependencies": {
     "pellicule": "0.3.0",

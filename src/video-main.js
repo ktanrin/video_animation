@@ -4,8 +4,13 @@ import { FRAME_KEY, CONFIG_KEY } from 'pellicule'
 import { waitForRenderReady } from 'pellicule/runtime/ready'
 import { setupPreviewOverlay } from 'pellicule/runtime/preview'
 import Video from '../Video.vue'
+import { getScenario } from './data/hiro.js'
 const params = new URLSearchParams(location.search)
-const config = {fps:Number(params.get('fps')||30),durationInFrames:Number(params.get('duration')||900),width:Number(params.get('width')||1920),height:Number(params.get('height')||1080)}
+const scenario = getScenario(params.get('scenario') || 'segregated', params.get('direction') || '21')
+const fps = Number(params.get('fps') || 30)
+const requestedSpeed = Number(params.get('speed') || 1)
+const playbackSpeed = [.5, 1, 2, 4, 8].includes(requestedSpeed) ? requestedSpeed : 1
+const config = {fps,durationInFrames:Number(params.get('duration') || Math.ceil(scenario.duration * fps / playbackSpeed) + 1),width:Number(params.get('width')||1920),height:Number(params.get('height')||1080)}
 const preview=params.get('preview')==='1'
 const frame=ref(0)
 const canvas=document.getElementById('pellicule-canvas')
